@@ -7,13 +7,13 @@
 import cloud from "@lafjs/cloud";
 const db = cloud.database();
 const bucket = `<appid>-<bucketName>`; // 请替换为你的存储桶名称，填目标迁移laf的存储桶名称，打开读写权限
-const bucketURL = "oss.laf.run"; // 请替换为你的目标迁移laf的oss域名
+const bucketURL = "https://oss.laf.run"; // 请替换为你的目标迁移laf的oss域名
 
 export async function main(ctx: FunctionContext) {
   // 数据库info.json
   const info: {
     [key: string]: number;
-  } = (await cloud.fetch(`http://${bucket}.${bucketURL}/BackupDB/info.json`))
+  } = (await cloud.fetch(`${bucket}.${bucketURL}/BackupDB/info.json`))
     .data;
   // 遍历数据库
   for (const [key, value] of Object.entries(info)) {
@@ -33,7 +33,7 @@ export async function main(ctx: FunctionContext) {
       try {
         const data = (
           await cloud.fetch(
-            `http://${bucket}.${bucketURL}/BackupDB/${key}/${i}.json`
+            `${bucket}.${bucketURL}/BackupDB/${key}/${i}.json`
           )
         ).data;
         // 插入数据
