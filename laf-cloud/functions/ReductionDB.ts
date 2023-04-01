@@ -15,7 +15,6 @@ export async function main(ctx: FunctionContext) {
     [key: string]: number;
   } = (await cloud.fetch(`http://${bucket}.${bucketURL}/BackupDB/info.json`))
     .data;
-  console.log(info);
   // 遍历数据库
   for (const [key, value] of Object.entries(info)) {
     //按1000条分批次插入
