@@ -7,8 +7,8 @@
  */
 import cloud from "@lafjs/cloud";
 import { S3 } from "@aws-sdk/client-s3"
-const bucket = `oo34zp-213123`; // 请替换为你的存储桶名称，填目标迁移laf的存储桶名称，打开读写权限
-const credentialsURL = "http://oo34zp.qdev.run/get-oss-sts" // 请替换为你的目标迁移laf的获取临时密钥的函数地址
+const bucket = `<appid>-存储桶名称`; // 请替换为你的存储桶名称，填目标迁移laf的存储桶名称，打开读写权限
+const credentialsURL = "https://appid.laf.run/get-oss-sts" // 请替换为你的目标迁移laf的获取临时密钥的函数地址
 
 export async function main(ctx: FunctionContext) {
   const { credentials, endpoint, region } = (await cloud.fetch(credentialsURL)).data;
@@ -43,7 +43,13 @@ export async function main(ctx: FunctionContext) {
       //计算需分几次取
       const batchTimes = Math.ceil(total / 1000);
       //批量获取数据
-      for (let i = 0; i < batchTimes; i++) {
+      let start = 0
+      //如果查询到批次
+      const batchRes = await db.collection("BackupDB").where({DbName:DbName}).getOne()
+      if(batchRes.data){
+        start = batchRes.data.Batch
+      }
+      for (let i = start; i < batchTimes; i++) {
         try {
           const res = await collection.skip(i * 1000).limit(1000).get();
           const filename = `${BackupDBPath}/${DbName}/${i}.json`
@@ -53,9 +59,15 @@ export async function main(ctx: FunctionContext) {
             Body: JSON.stringify(res.data),
             ContentType: 'application/json',
           })
+          // 记录插入表的批次，保存到数据库
+          console.log(`插入${DbName}表第${i}批数据成功`);
+          await db.collection("BackupDB").add({
+            DbName: DbName,
+            Batch: i,
+          })
         } catch (error) {
           console.log(error);
-          return { data: error };
+          return { data: "备份出现"+error };
         }
       }      
     }
@@ -67,7 +79,9 @@ export async function main(ctx: FunctionContext) {
       ContentType: 'application/json',
     })
     if (upload_res.$metadata.httpStatusCode == 200) {
-      return { data: "备份成功" };
+      // 记录日志
+      console.log("全部数据库备份成功");
+      return { data: "全部数据库备份成功" };
     }else{
       return { data: "备份失败" };
     }
