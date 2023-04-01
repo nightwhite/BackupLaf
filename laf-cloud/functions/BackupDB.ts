@@ -67,7 +67,7 @@ export async function main(ctx: FunctionContext) {
           })
         } catch (error) {
           console.log(error);
-          return { data: "备份出现"+error };
+          return { data: "备份出错："+error };
         }
       }      
     }
