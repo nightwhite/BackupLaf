@@ -6,6 +6,7 @@
  * 结果：在新Laf存储桶的BackupDB目录下，会生成info.json和各个数据库的json文件
  */
 import cloud from "@lafjs/cloud";
+import { EJSON } from 'bson'
 import { S3 } from "@aws-sdk/client-s3"
 const bucket = `<appid>-存储桶名称`; // 请替换为你的存储桶名称，填目标迁移laf的存储桶名称，打开读写权限
 const credentialsURL = "https://appid.laf.run/get-oss-sts" // 请替换为你的目标迁移laf的获取临时密钥的函数地址
@@ -56,7 +57,7 @@ export async function main(ctx: FunctionContext) {
           const upload_res = await s3Client.putObject({  
             Bucket: bucket,
             Key: filename,
-            Body: JSON.stringify(res.data),
+            Body: EJSON.stringify(res.data),
             ContentType: 'application/json',
           })
           // 记录插入表的批次，保存到数据库

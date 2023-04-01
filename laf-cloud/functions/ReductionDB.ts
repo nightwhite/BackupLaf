@@ -5,6 +5,8 @@
  * 需要先在老1.0的云函数中运行备份云函数，将数据备份到新Laf的存储桶中后在运行本云函数
  */
 import cloud from "@lafjs/cloud";
+import { EJSON } from 'bson'
+import { Document, OptionalId } from "mongodb";
 const db = cloud.database();
 const bucket = `<appid>-<bucketName>`; // 请替换为你的存储桶名称，填目标迁移laf的存储桶名称，打开读写权限
 const bucketURL = "https://oss.laf.run"; // 请替换为你的目标迁移laf的oss域名
@@ -38,7 +40,9 @@ export async function main(ctx: FunctionContext) {
         ).data;
         // 插入数据
         const collection = cloud.mongo.db.collection(key);
-        await collection.insertMany(data);
+        // 将字符串解析为对象数组
+        const dataArray = EJSON.parse(data, { relaxed: false }) as OptionalId<Document>[];
+        await collection.insertMany(dataArray);
         console.log(`插入${key}表第${i}批数据成功`);
         // 记录插入表的批次，保存到数据库
         await db.collection("ReductionDB").add({
