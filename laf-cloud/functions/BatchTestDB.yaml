@@ -1,0 +1,5 @@
+name: BatchTestDB
+methods:
+  - GET
+  - POST
+tags: []

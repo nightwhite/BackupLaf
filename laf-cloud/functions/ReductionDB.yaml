@@ -1,0 +1,5 @@
+name: ReductionDB
+methods:
+  - GET
+  - POST
+tags: []

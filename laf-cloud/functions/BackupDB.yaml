@@ -1,0 +1,5 @@
+name: BackupDB
+methods:
+  - GET
+  - POST
+tags: []

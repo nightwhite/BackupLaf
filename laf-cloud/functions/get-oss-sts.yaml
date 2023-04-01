@@ -1,0 +1,5 @@
+name: get-oss-sts
+methods:
+  - GET
+  - POST
+tags: []
