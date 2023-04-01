@@ -8,8 +8,8 @@ import cloud from "@lafjs/cloud";
 import { EJSON } from 'bson'
 import { Document, OptionalId } from "mongodb";
 const db = cloud.database();
-const bucket = `<appid>-<bucketName>`; // 请替换为你的存储桶名称，填目标迁移laf的存储桶名称，打开读写权限
-const bucketURL = "https://oss.laf.run"; // 请替换为你的目标迁移laf的oss域名
+const bucket = `https://<appid>-<bucketName>`; // 请替换为你的存储桶名称，填目标迁移laf的存储桶名称，打开读写权限
+const bucketURL = "oss.laf.run"; // 请替换为你的目标迁移laf的oss域名
 
 export async function main(ctx: FunctionContext) {
   // 数据库info.json
