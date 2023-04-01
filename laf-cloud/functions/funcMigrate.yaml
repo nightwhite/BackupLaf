@@ -1,0 +1,5 @@
+name: funcMigrate
+methods:
+  - GET
+  - POST
+tags: []
