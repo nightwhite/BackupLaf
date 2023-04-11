@@ -11,7 +11,7 @@ export async function main(ctx: FunctionContext) {
       data.push({ name: `laf${i * 1000 + j}` })
     }
     try {
-      await collection.insertMany(data)
+      // await collection.insertMany(data)
       console.log(`插入test表第${i}批数据成功`)
     } catch (error) {
       console.log('插入失败：', error);
