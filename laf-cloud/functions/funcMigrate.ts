@@ -20,7 +20,7 @@ const newServer = 'http://api.laf.run' // 新的Api server地址
 export async function main(ctx: FunctionContext) {
   let oldToken, newToken;
   try {
-    const oldResponse = await cloud.fetch.post(`${oldServer}/v1/pat2token`, {
+    const oldResponse = await cloud.fetch.post(`${oldServer}/v1/auth/pat2token`, {
       pat: oldPat
     }, {
       headers: {
@@ -28,7 +28,7 @@ export async function main(ctx: FunctionContext) {
         'Content-Type': 'application/json'
       }
     });
-    const newResponse = await cloud.fetch.post(`${newServer}/v1/pat2token`, {
+    const newResponse = await cloud.fetch.post(`${newServer}/v1/auth/pat2token`, {
       pat: newPat
     }, {
       headers: {
